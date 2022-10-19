@@ -1,6 +1,6 @@
 const express = require("express");
 const cookieParser = require("cookie-parser");
-const csrf = require("./middleware/csrf");
+const csrf = require("host-csrf");
 const app = express();
 
 app.set("view engine", "ejs");
@@ -13,7 +13,7 @@ if (app.get("env") === "production") {
 }
 const csrf_options = {
   protected_operations: ["PATCH"],
-  protected_datatypes: ["application/json"],
+  protected_content_types: ["application/json"],
   development_mode: csrf_development_mode,
 };
 
@@ -31,6 +31,10 @@ app.get("/fail", (req, res) => {
 app.get("/succeed", (req, res) => {
   res.render("succeed");
 });
+app.get("/refresh", (req,res) => {
+  csrf.refresh(req,res);
+  res.redirect("/");
+})
 
 const port = process.env.PORT || 3000;
 const start = async () => {

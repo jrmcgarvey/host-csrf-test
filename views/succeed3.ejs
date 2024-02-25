@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <h1>Even this will post too:</h1>
+    <form action="/report" method="POST" id="post2">
+        <label for="input-1">input</label>
+        <input type="text" id="input-1" name="input_1">
+        <button type="submit" id="submit">Submit</button>
+    </form>
+    <a href="/">Home</a>
+    <script>
+        document.addEventListener("DOMContentLoaded", async () =>{            
+            const formId = document.getElementById("post2")
+
+                const result = await fetch("/currenttoken")
+                const resultObj = await result.json()
+            csrfField = document.createElement("input")
+            csrfField.setAttribute("type", "hidden")
+            csrfField.setAttribute("name", "_csrf")
+            csrfField.value = resultObj.csrfToken;
+        formId.appendChild(csrfField)
+        })
+  
+</script>
+    </body>
+</html>

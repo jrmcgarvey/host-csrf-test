@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <h1>This will post too:</h1>
+    <form action="/report" method="POST" id="post2">
+        <label for="input-1">input</label>
+        <input type="text" id="input-1" name="input_1">
+        <button type="button" id="submit">Submit</button>
+    </form>
+    <a href="/">Home</a>
+    <script>
+        document.addEventListener("DOMContentLoaded", () =>{
+            
+            const subButton = document.getElementById("submit")
+            const inputOne = document.getElementById("input-1")
+            console.log("inputOne:", inputOne)
+            subButton.addEventListener("click", async ()=>{
+                console.log("got here")
+                const result = await fetch("/CSRFToken")
+                const resultObj = await result.json()
+                const inputValue = inputOne.value
+                const dataString = JSON.stringify({"input_1": inputValue})
+                console.log("dataString", dataString)
+                const resp = await fetch("/report",{ method: "POST", 
+                body: dataString,
+                headers: { "csrf-token": resultObj.csrfToken,
+                        "content-type": "application/json",
+                    redirect: "manual"}
+            })
+            console.log(resp)
+            if (resp.redirected) {
+                window.location =resp.url
+            }
+        })
+    });
+</script>
+    </body>
+</html>
